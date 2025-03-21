@@ -13,6 +13,9 @@ export const login = async (req: Request, res: Response) => {
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (!passwordMatch) { return res.sendStatus(401).json({ message: 'Invalid username or password' }); }
   const secretKey = process.env.JWT_SECRET_KEY || '';
+  if(!secretKey){
+    return res.status(500).json({message: 'Internal server error'})
+  }
   const token = jwt.sign({ username }, secretKey, {expiresIn: '1h'});
   return res.json({ token });
 }
