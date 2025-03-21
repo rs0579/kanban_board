@@ -1,25 +1,18 @@
 import { UserLogin } from "../interfaces/UserLogin";
+import axios from "axios";
 
 const login = async (userInfo: UserLogin) => {
   // TODO: make a POST request to the login route
-  try{
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(userInfo)
+  try {
+    const response = await axios.post("https://your-api.com/login", userInfo, {
+      headers: { "Content-Type": "application/json" },
     });
-    const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error("User information is incorrect");
-    }
-    return data;
-  } catch (err) {
-    console.error('Failed to login', err);
-    return Promise.reject("Failed to login");
-  } 
+    return response.data; // Usually contains the token or user details
+  } catch (error: any) {
+    console.error("Login failed:", error.response?.data || error.message);
+    throw error; // Rethrow for the calling function to handle
+  }
 }
 
 
