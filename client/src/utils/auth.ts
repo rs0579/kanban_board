@@ -12,30 +12,28 @@ class AuthService {
     // Check if the token is expired THE DOUBLE NEGATION !! IS USED TO CONVERT THE VALUE TO A BOOLEAN TO EMPHASIZE THAT THE VALUE IS A BOOLEAN
     return !!token && !this.isTokenExpired(token);
   }
-  
+
   isTokenExpired(token: string) {
     // TODO: return a value that indicates if the token is expired
-  try {
-    const decoded = jwtDecode<JwtPayload>(token);
-    if (decoded?.exp && decoded?.exp < Date.now()/1000) {
-      return true;
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      return decoded?.exp ? decoded.exp < Date.now() / 1000 : false
+    } catch (error) {
+      return false;
     }
-  } catch (error) {
-    return false;
-  }
   }
 
   getToken(): string {
     // TODO: return the token
-   const loggedUser = localStorage.getItem('token') || '';
+    const loggedUser = localStorage.getItem('token') || '';
     return loggedUser;
   }
 
   login(idToken: string) {
     // TODO: set the token to localStorage
     // TODO: redirect to the home page
-  localStorage.setItem('token', idToken);
-  window.location.assign('/');
+    localStorage.setItem('token', idToken);
+    window.location.assign('/');
   }
 
   logout() {
